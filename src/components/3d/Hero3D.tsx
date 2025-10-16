@@ -294,12 +294,13 @@ const Hero3D: React.FC = () => {
         
         {/* Main Title - Line 2 */}
         <h2 
-          className="text-3xl md:text-5xl font-bold mb-8 opacity-0 hardware-accelerated" 
+          className="text-3xl md:text-5xl font-bold mb-8 opacity-0 hardware-accelerated inline-block" 
           style={{ 
             animation: "spectacularFadeInUp 0.7s ease-out 0.3s forwards",
           }}
         >
-          IN<span className="text-primary">TEMS</span>TELLAR<sub className="text-lg md:text-2xl ml-1 text-foreground/70">CHAPTER 1</sub>
+          <div>IN<span className="text-primary">TEMS</span>TELLAR</div>
+          <div className="text-right text-sm md:text-lg">CHAPTER 1</div>
         </h2>
         
         {/* Description with dramatic entrance */}
