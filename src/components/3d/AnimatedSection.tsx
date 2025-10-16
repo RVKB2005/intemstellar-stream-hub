@@ -55,24 +55,20 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   const prefersReducedMotion = useReducedMotion();
   const [hasAnimated, setHasAnimated] = useState(false);
 
-  // Memoize device performance check
-  const devicePerformance = useMemo(() => getDevicePerformance(), []);
+  // Force low-end device performance settings for all devices
+  const devicePerformance = 'low' as const;
 
-  // Adjust settings based on device performance
+  // Optimize settings for low-end devices (applied to all)
   const optimizedSettings = useMemo(() => {
-    const shouldEnable3D = enable3D && devicePerformance !== 'low';
-    const shouldEnableParticles = enableParticles && devicePerformance === 'high';
-    const adjustedDuration = devicePerformance === 'low' ? duration * 0.6 : duration;
-
     return {
-      enable3D: shouldEnable3D,
-      enableParticles: shouldEnableParticles,
-      duration: adjustedDuration,
-      useGPU: devicePerformance !== 'low',
+      enable3D: false, // Disable 3D transforms
+      enableParticles: false, // Disable particles
+      duration: duration * 0.5, // 50% faster animations
+      useGPU: true, // Still use GPU acceleration where available
     };
-  }, [enable3D, enableParticles, duration, devicePerformance]);
+  }, [duration]);
 
-  // Optimized Intersection Observer with performance considerations
+  // Optimized Intersection Observer for low-end devices
   useEffect(() => {
     if (!sectionRef.current || prefersReducedMotion) {
       // Skip animation for reduced motion preference
@@ -95,17 +91,17 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
       },
       {
         threshold: 0.01,
-        // Adjust root margin based on device performance
-        rootMargin: devicePerformance === 'low' ? '100px 0px 0px 0px' : '200px 0px 0px 0px',
+        // Smaller root margin for faster response
+        rootMargin: '50px 0px 0px 0px',
       }
     );
 
     observer.observe(sectionRef.current);
 
     return () => observer.disconnect();
-  }, [triggerOffset, hasAnimated, controls, onAnimationStart, devicePerformance, prefersReducedMotion]);
+  }, [triggerOffset, hasAnimated, controls, onAnimationStart, prefersReducedMotion]);
 
-  // Optimized animation variants with performance-based adjustments
+  // Simplified animation variants optimized for all devices
   const getAnimationVariants = useCallback(() => {
     // Simplified animations for reduced motion
     if (prefersReducedMotion) {
@@ -113,24 +109,19 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
         hidden: { opacity: 0 },
         visible: {
           opacity: 1,
-          transition: { duration: 0.3 }
+          transition: { duration: 0.2 }
         }
       };
     }
 
-    const intensityMultiplier = {
-      light: 0.5,
-      medium: 1,
-      heavy: devicePerformance === 'low' ? 1 : 2, // Reduce heavy intensity on low-end devices
-    }[intensity];
+    const { duration: adjustedDuration } = optimizedSettings;
 
-    const { enable3D: use3D, duration: adjustedDuration } = optimizedSettings;
-
+    // Simplified variants - no 3D transforms, minimal complexity
     const baseVariants = {
       slide: {
         hidden: {
           opacity: 0,
-          y: devicePerformance === 'low' ? 20 : 30, // Simpler transform on low-end
+          y: 15, // Minimal transform
         },
         visible: {
           opacity: 1,
@@ -138,102 +129,75 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
           transition: {
             duration: adjustedDuration * 0.8,
             ease: [0.25, 0.46, 0.45, 0.94] as const,
-            staggerChildren: devicePerformance === 'low' ? 0.08 : 0.15,
-            delayChildren: 0.1,
+            staggerChildren: 0.05,
+            delayChildren: 0.05,
           }
         },
       },
       rotate: {
         hidden: {
           opacity: 0,
-          rotateX: use3D ? -10 * intensityMultiplier : 0,
-          rotateY: use3D ? 5 * intensityMultiplier : 0,
           scale: 0.95,
-          ...(use3D && { z: -20 }),
         },
         visible: {
           opacity: 1,
-          rotateX: 0,
-          rotateY: 0,
           scale: 1,
-          ...(use3D && { z: 0 }),
           transition: {
             duration: adjustedDuration * 0.5,
             ease: [0.25, 0.46, 0.45, 0.94] as const,
-            staggerChildren: 0.05,
+            staggerChildren: 0.03,
           }
         },
       },
       scale: {
         hidden: {
           opacity: 0,
-          scale: devicePerformance === 'low' ? 0.8 : 0.1 * intensityMultiplier,
-          rotateZ: use3D ? (devicePerformance === 'low' ? 45 : 180) : 0,
-          ...(use3D && { z: devicePerformance === 'low' ? -50 : -300 }),
+          scale: 0.85,
         },
         visible: {
           opacity: 1,
           scale: 1,
-          rotateZ: 0,
-          ...(use3D && { z: 0 }),
           transition: {
-            duration: adjustedDuration * 1.3,
+            duration: adjustedDuration * 0.7,
             ease: [0.175, 0.885, 0.32, 1.275] as const,
-            staggerChildren: 0.08,
+            staggerChildren: 0.05,
           }
         },
       },
       morph: {
         hidden: {
           opacity: 0,
-          scale: 0.3,
-          rotateY: use3D ? (devicePerformance === 'low' ? 90 : 270) * intensityMultiplier : 0,
-          rotateX: use3D && devicePerformance !== 'low' ? 45 : 0,
-          skewX: devicePerformance === 'low' ? 10 : 25,
-          ...(use3D && devicePerformance !== 'low' && { skewY: 15 }),
-          ...(use3D && { z: devicePerformance === 'low' ? -50 : -150 }),
+          scale: 0.9,
         },
         visible: {
           opacity: 1,
           scale: 1,
-          rotateY: 0,
-          rotateX: 0,
-          skewX: 0,
-          skewY: 0,
-          ...(use3D && { z: 0 }),
           transition: {
-            duration: adjustedDuration * 1.8,
+            duration: adjustedDuration * 0.9,
             ease: [0.23, 1, 0.32, 1] as const,
-            staggerChildren: 0.12,
+            staggerChildren: 0.06,
           }
         },
       },
       explode: {
         hidden: {
           opacity: 0,
-          scale: devicePerformance === 'low' ? 1.5 : 3 * intensityMultiplier,
-          rotate: use3D ? (devicePerformance === 'low' ? 180 : 720) : 0,
-          ...(use3D && devicePerformance !== 'low' && { rotateX: 180, rotateY: 180 }),
-          ...(use3D && { z: devicePerformance === 'low' ? 100 : 500 }),
+          scale: 1.2,
         },
         visible: {
           opacity: 1,
           scale: 1,
-          rotate: 0,
-          rotateX: 0,
-          rotateY: 0,
-          ...(use3D && { z: 0 }),
           transition: {
-            duration: adjustedDuration * 1.1,
+            duration: adjustedDuration * 0.6,
             ease: [0.19, 1, 0.22, 1] as const,
-            staggerChildren: 0.05,
+            staggerChildren: 0.03,
           }
         },
       },
     };
 
     return baseVariants[animationType];
-  }, [animationType, intensity, optimizedSettings, devicePerformance, prefersReducedMotion]);
+  }, [animationType, optimizedSettings, prefersReducedMotion]);
 
   // Handle animation completion
   const handleAnimationComplete = useCallback(() => {
@@ -243,36 +207,24 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   return (
     <motion.div
       ref={sectionRef}
-      className={`${className} ${optimizedSettings.useGPU ? 'transform-gpu' : ''}`}
+      className={`${className} transform-gpu`}
       initial="hidden"
       animate={controls}
       variants={getAnimationVariants()}
       onAnimationComplete={handleAnimationComplete}
       style={{
-        perspective: optimizedSettings.enable3D ? '1000px' : 'none',
-        transformStyle: optimizedSettings.enable3D ? 'preserve-3d' : 'flat',
-        // Force GPU acceleration on capable devices
-        ...(optimizedSettings.useGPU && {
-          willChange: 'transform, opacity',
-        }),
+        // Minimal GPU hints for best performance
+        willChange: 'transform, opacity',
       }}
     >
-      {optimizedSettings.enableParticles && (
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <ParticleTrail
-            isActive={hasAnimated}
-            intensity={intensity}
-            devicePerformance={devicePerformance}
-          />
-        </div>
-      )}
+      {/* Particles disabled for performance */}
       <motion.div
         variants={{
           hidden: {},
           visible: {
             transition: {
-              staggerChildren: devicePerformance === 'low' ? 0.05 : 0.1,
-              delayChildren: devicePerformance === 'low' ? 0.1 : 0.2,
+              staggerChildren: 0.03,
+              delayChildren: 0.05,
             }
           }
         }}

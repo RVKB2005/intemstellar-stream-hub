@@ -299,7 +299,7 @@ const Hero3D: React.FC = () => {
             animation: "spectacularFadeInUp 0.7s ease-out 0.3s forwards",
           }}
         >
-          IN<span className="text-primary">TEMS</span>TELLAR CHAPTER 1
+          IN<span className="text-primary">TEMS</span>TELLAR<sub className="text-lg md:text-2xl ml-1 text-foreground/70">CHAPTER 1</sub>
         </h2>
         
         {/* Description with dramatic entrance */}
