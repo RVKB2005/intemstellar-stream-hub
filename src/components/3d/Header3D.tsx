@@ -218,7 +218,7 @@ const Header3D: React.FC = () => {
   return (
     <motion.header
       ref={headerRef}
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-500 border-b border-transparent"
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-0 border-b border-transparent"
       initial={{ y: -100, opacity: 0, rotateX: -15 }}
       animate={{ y: 0, opacity: 1, rotateX: 0 }}
       transition={{ duration: 1, ease: "backOut" }}
