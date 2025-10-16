@@ -28,9 +28,9 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
 }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const controls = useAnimation();
-  const isInView = useInView(sectionRef, { 
-    once: true, 
-    margin: `-${(1 - triggerOffset) * 100}% 0px` 
+  const isInView = useInView(sectionRef, {
+    once: true,
+    margin: `${-(1 - triggerOffset) * 100}% 0px 0px 0px`
   });
   const [hasAnimated, setHasAnimated] = useState(false);
 
@@ -72,62 +72,62 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
 
     const baseVariants = {
       slide: {
-        hidden: { 
+        hidden: {
           opacity: 0,
         },
-        visible: { 
+        visible: {
           opacity: 1,
-          transition: { 
+          transition: {
             duration: duration * 0.8,
-            ease: [0.25, 0.46, 0.45, 0.94],
+            ease: [0.25, 0.46, 0.45, 0.94] as const,
             staggerChildren: 0.15,
             delayChildren: 0.1,
           }
         },
       },
       rotate: {
-        hidden: { 
-          opacity: 0, 
+        hidden: {
+          opacity: 0,
           rotateX: enable3D ? -10 * intensityMultiplier : -5 * intensityMultiplier,
           rotateY: enable3D ? 5 * intensityMultiplier : 0,
           scale: 0.95,
           z: enable3D ? -20 : 0,
         },
-        visible: { 
-          opacity: 1, 
+        visible: {
+          opacity: 1,
           rotateX: 0,
           rotateY: 0,
           scale: 1,
           z: 0,
-          transition: { 
+          transition: {
             duration: duration * 0.5,
-            ease: [0.25, 0.46, 0.45, 0.94],
+            ease: [0.25, 0.46, 0.45, 0.94] as const,
             staggerChildren: 0.05,
           }
         },
       },
       scale: {
-        hidden: { 
-          opacity: 0, 
+        hidden: {
+          opacity: 0,
           scale: 0.1 * intensityMultiplier,
           rotateZ: enable3D ? 180 : 90,
           z: enable3D ? -300 : 0,
         },
-        visible: { 
-          opacity: 1, 
+        visible: {
+          opacity: 1,
           scale: 1,
           rotateZ: 0,
           z: 0,
-          transition: { 
+          transition: {
             duration: duration * 1.3,
-            ease: [0.175, 0.885, 0.32, 1.275],
+            ease: [0.175, 0.885, 0.32, 1.275] as const,
             staggerChildren: 0.08,
           }
         },
       },
       morph: {
-        hidden: { 
-          opacity: 0, 
+        hidden: {
+          opacity: 0,
           scale: 0.3,
           rotateY: enable3D ? 270 * intensityMultiplier : 180 * intensityMultiplier,
           rotateX: enable3D ? 45 : 0,
@@ -135,40 +135,40 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
           skewY: enable3D ? 15 : 0,
           z: enable3D ? -150 : 0,
         },
-        visible: { 
-          opacity: 1, 
+        visible: {
+          opacity: 1,
           scale: 1,
           rotateY: 0,
           rotateX: 0,
           skewX: 0,
           skewY: 0,
           z: 0,
-          transition: { 
+          transition: {
             duration: duration * 1.8,
-            ease: [0.23, 1, 0.32, 1],
+            ease: [0.23, 1, 0.32, 1] as const,
             staggerChildren: 0.12,
           }
         },
       },
       explode: {
-        hidden: { 
-          opacity: 0, 
+        hidden: {
+          opacity: 0,
           scale: 3 * intensityMultiplier,
           rotate: enable3D ? 720 : 360,
           rotateX: enable3D ? 180 : 0,
           rotateY: enable3D ? 180 : 0,
           z: enable3D ? 500 : 0,
         },
-        visible: { 
-          opacity: 1, 
+        visible: {
+          opacity: 1,
           scale: 1,
           rotate: 0,
           rotateX: 0,
           rotateY: 0,
           z: 0,
-          transition: { 
+          transition: {
             duration: duration * 1.1,
-            ease: [0.19, 1, 0.22, 1],
+            ease: [0.19, 1, 0.22, 1] as const,
             staggerChildren: 0.05,
           }
         },
@@ -219,9 +219,9 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
 };
 
 // Particle trail component for enhanced visual effects
-const ParticleTrail: React.FC<{ isActive: boolean; intensity: 'light' | 'medium' | 'heavy' }> = ({ 
-  isActive, 
-  intensity 
+const ParticleTrail: React.FC<{ isActive: boolean; intensity: 'light' | 'medium' | 'heavy' }> = ({
+  isActive,
+  intensity
 }) => {
   const particleCount = {
     light: 5,

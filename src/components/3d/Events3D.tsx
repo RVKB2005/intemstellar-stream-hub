@@ -30,7 +30,7 @@ const Events3D: React.FC = () => {
       title: "Brand-o-Vation",
       subtitle: "The Last Ad-pocalypse",
       theme: "All of Us Are Dead",
-      tagline: "Go Viral or Go Dead 🧟‍♂️",
+      tagline: "Go Viral or Go Dead!",
       coordinators: [
         { name: "Lalith J", phone: "9791382086", year: "2nd Year" },
         { name: "Kamalika N M", phone: "9042887720", year: "2nd Year" },
@@ -204,7 +204,7 @@ const Events3D: React.FC = () => {
               transform: "translateZ(50px)"
             }}
           >
-            Featured <span className="text-primary text-glow">Events</span>
+            Featured <span className="text-primary">Events</span>
           </motion.h2>
           <motion.p 
             className="text-xl text-muted-foreground max-w-2xl mx-auto"
@@ -220,8 +220,8 @@ const Events3D: React.FC = () => {
         </motion.div>
 
         {/* 3D Grid Container */}
-        <div className="relative preserve-3d">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-20 relative">
+        <div className="relative preserve-3d max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 sm:gap-16 md:gap-20 relative">
             {events.map((event, index) => (
               <EventCard3D
                 key={event.title}

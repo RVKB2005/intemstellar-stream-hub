@@ -23,15 +23,15 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "bg-background/95 backdrop-blur-lg shadow-lg shadow-primary/10" : "bg-transparent"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "bg-background/95 backdrop-blur-lg" : "bg-transparent"
         }`}
     >
       {/* Main Header */}
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <a href="#home" className="text-2xl md:text-3xl font-bold tracking-tight">
-            In<span className="text-primary">TEMS</span>tellar
+          <a href="#home" className="text-xl md:text-2xl font-bold tracking-tight">
+            IN<span className="text-primary">TEMS</span>TELLAR
           </a>
 
           {/* Desktop Navigation */}
@@ -45,7 +45,10 @@ const Header = () => {
                 {link.name}
               </a>
             ))}
-            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 shadow-lg hover:shadow-primary/50 transition-all">
+            <Button 
+              className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 transition-all"
+              onClick={() => document.getElementById("events")?.scrollIntoView({ behavior: "smooth" })}
+            >
               Register Now
             </Button>
           </nav>
@@ -72,7 +75,13 @@ const Header = () => {
                 {link.name}
               </a>
             ))}
-            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-lg">
+            <Button 
+              className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                document.getElementById("events")?.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
               Register Now
             </Button>
           </nav>

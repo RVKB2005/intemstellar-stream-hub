@@ -71,7 +71,7 @@ const EventCard3D: React.FC<EventCard3DProps> = ({
     if (isHovered || isFocused) {
       const interval = setInterval(() => {
         createParticleBurst();
-      }, 200);
+      }, 800);
       
       return () => clearInterval(interval);
     }
@@ -106,15 +106,15 @@ const EventCard3D: React.FC<EventCard3DProps> = ({
   }, [particles.length]);
   
   const createParticleBurst = () => {
-    const newParticles = Array.from({ length: 8 }, () => ({
+    const newParticles = Array.from({ length: 3 }, () => ({
       id: particleIdRef.current++,
       x: Math.random() * 400,
       y: Math.random() * 300 + 100,
-      vx: (Math.random() - 0.5) * 4,
-      vy: -Math.random() * 3 - 2,
+      vx: (Math.random() - 0.5) * 2,
+      vy: -Math.random() * 2 - 1,
     }));
     
-    setParticles(prev => [...prev, ...newParticles].slice(-50)); // Limit particles
+    setParticles(prev => [...prev, ...newParticles].slice(-20)); // Limit particles
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -131,7 +131,7 @@ const EventCard3D: React.FC<EventCard3DProps> = ({
     mouseY.set(mouseYPercent);
     
     // Trigger particle burst on mouse movement when hovered
-    if (isHovered && Math.random() > 0.7) {
+    if (isHovered && Math.random() > 0.95) {
       createParticleBurst();
     }
   };
@@ -215,7 +215,7 @@ const EventCard3D: React.FC<EventCard3DProps> = ({
   return (
     <motion.div
       ref={cardRef}
-      className="relative preserve-3d cursor-pointer"
+      className="relative preserve-3d cursor-pointer overflow-visible"
       style={{
         perspective: "1000px",
       }}
@@ -247,7 +247,7 @@ const EventCard3D: React.FC<EventCard3DProps> = ({
     >
       {/* Card Container with 3D transforms */}
       <motion.div
-        className="relative w-full h-[580px] md:h-[680px]"
+        className="relative w-full"
         style={{
           transformStyle: "preserve-3d",
         }}
@@ -279,146 +279,82 @@ const EventCard3D: React.FC<EventCard3DProps> = ({
         >
         {/* Front Face */}
         <motion.div
-          className="absolute inset-0 w-full h-full backface-hidden rounded-2xl overflow-hidden"
+          className="relative w-full backface-hidden rounded-2xl overflow-hidden"
           style={{
             backfaceVisibility: "hidden",
             transform: "translateZ(0px)",
+            boxShadow: isHovered 
+              ? `0 0 20px ${accentColor}60, 0 0 40px ${accentColor}30, inset 0 0 30px ${accentColor}15`
+              : `0 0 10px ${accentColor}30, inset 0 0 15px ${accentColor}10`,
           }}
+          animate={{
+            boxShadow: isHovered 
+              ? `0 0 20px ${accentColor}60, 0 0 40px ${accentColor}30, inset 0 0 30px ${accentColor}15`
+              : `0 0 10px ${accentColor}30, inset 0 0 15px ${accentColor}10`,
+          }}
+          transition={{ duration: 0.3 }}
         >
           {/* Card Image Background */}
-          <div className="relative h-full overflow-hidden">
-            <motion.img
+          <div className="relative w-full">
+            <img
               src={image}
               alt={title}
-              className="w-full h-full object-cover"
-              animate={{
-                scale: isHovered ? 1.2 : 1.1,
-                rotate: isHovered ? 2 : 0,
-              }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="w-full h-auto object-contain block"
             />
             
-            {/* Gradient Overlay */}
+            {/* Flip Indicator */}
             <motion.div
-              className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent"
+              className="absolute bottom-4 right-4 text-xs text-white bg-black/50 px-3 py-2 rounded-lg backdrop-blur-sm"
               animate={{
-                opacity: isHovered ? 1 : 0.9,
+                opacity: isHovered ? 1 : 0.7,
               }}
-              transition={{ duration: 0.7 }}
-            />
-            
-            {/* Dynamic Accent Glow */}
-            <motion.div
-              className="absolute inset-0"
-              style={{
-                background: `radial-gradient(circle at 50% 50%, ${accentColor}, transparent 50%)`,
-              }}
-              animate={{
-                opacity: isHovered ? 0.4 : 0,
-                scale: isHovered ? 1.2 : 1,
-              }}
-              transition={{ duration: 0.7 }}
-            />
-            
-            {/* Floating Border Effects */}
-            <motion.div 
-              className="absolute inset-0 rounded-2xl"
-              style={{
-                boxShadow: isHovered 
-                  ? `0 0 60px ${accentColor}, 0 0 100px ${accentColor}80, inset 0 0 40px ${accentColor}20`
-                  : "none",
-              }}
-              animate={{
-                opacity: isHovered ? 1 : 0,
-              }}
-              transition={{ duration: 0.7 }}
-            />
-          </div>
-
-          {/* Content */}
-          <div className="absolute inset-0 p-8 flex flex-col justify-end">
-            <motion.div
-              animate={{
-                y: isHovered ? -24 : 0,
-                scale: isHovered ? 1.05 : 1,
-              }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
+              transition={{ duration: 0.3 }}
             >
-              <motion.p 
-                className="text-sm font-semibold text-muted-foreground mb-2 tracking-wider uppercase"
-                animate={{
-                  letterSpacing: isHovered ? "0.2em" : "0.1em",
-                  color: isHovered ? accentColor : undefined,
-                }}
-                transition={{ duration: 0.5 }}
-              >
-                Theme: {theme}
-              </motion.p>
-              
-              <motion.h3 
-                className="text-3xl md:text-4xl font-bold mb-3 text-foreground"
-                animate={{
-                  scale: isHovered ? 1.1 : 1,
-                }}
-                transition={{ duration: 0.5 }}
-                style={{ transformOrigin: "left" }}
-              >
-                {title}
-              </motion.h3>
-              
-              <motion.p 
-                className="text-lg md:text-xl font-semibold mb-6"
-                style={{ color: accentColor }}
-                animate={{
-                  scale: isHovered ? 1.05 : 1,
-                }}
-                transition={{ duration: 0.5 }}
-                style={{ transformOrigin: "left" }}
-              >
-                {tagline}
-              </motion.p>
-
-              {/* Flip Indicator */}
-              <motion.div
-                className="text-xs text-muted-foreground opacity-60"
-                animate={{
-                  opacity: isHovered ? 1 : 0.6,
-                  y: isHovered ? 0 : 10,
-                }}
-                transition={{ duration: 0.3 }}
-              >
-                Click to flip for details →
-              </motion.div>
+              Click to flip for details →
             </motion.div>
           </div>
         </motion.div>
 
         {/* Back Face - Coordinators Details */}
         <motion.div
-          className="absolute inset-0 w-full h-full backface-hidden rounded-2xl overflow-hidden"
+          className="absolute inset-0 w-full h-full backface-hidden rounded-2xl overflow-hidden min-h-[500px]"
           style={{
             backfaceVisibility: "hidden",
             transform: "rotateY(180deg) translateZ(1px)",
             background: `linear-gradient(135deg, ${accentColor}20, transparent 50%, ${accentColor}10)`,
           }}
         >
-          <div className="relative h-full p-8 flex flex-col justify-center bg-card/90 backdrop-blur-md">
+          <div className="relative h-full p-4 sm:p-6 md:p-8 flex flex-col justify-center bg-card/90 backdrop-blur-md">
             <motion.h3 
-              className="text-2xl md:text-3xl font-bold mb-6 text-center"
+              className="text-2xl md:text-3xl font-bold mb-3 text-center"
               style={{ color: accentColor }}
             >
               {title}
             </motion.h3>
             
-            <motion.p className="text-center text-muted-foreground mb-8 uppercase tracking-widest text-sm font-semibold">
+            <motion.p 
+              className="text-center font-bold mb-2 text-base"
+              style={{ color: accentColor }}
+            >
+              {tagline}
+            </motion.p>
+            
+            <motion.p className="text-center text-muted-foreground mb-6 text-sm leading-relaxed px-2">
+              {title === "Brand-o-Vation" && "In a world where brands collapse and ads go extinct, only creative marketing can cure the chaos. Brand-o-Vation: The Last Ad-pocalypse is your final showdown—pitch the impossible, survive with imagination."}
+              {title === "The Paradox Protocol" && "Reality fractures. Time rebels. Only brilliance can rewrite destiny in The Paradox Protocol."}
+              {title === "Ventura" && "Hundreds enter. Only a few escape. In Ventura's ruthless investment arena, fake money seals real fates — SOLD is survival, UNSOLD is oblivion. Play. Survive. Conquer."}
+              {title === "Capitalyze" && "Build your empire, conquer crises, and outsmart every rival who dares to challenge your throne. Every move counts — one brilliant strategy could crown you king, one mistake could crumble your empire."}
+            </motion.p>
+            
+            <motion.p className="text-center text-muted-foreground mb-4 uppercase tracking-widest text-xs font-semibold">
               Event Coordinators
             </motion.p>
             
-            <div className="space-y-4">
+            <div className="space-y-2">
               {coordinators.map((coord, idx) => (
                 <motion.div 
                   key={idx}
-                  className="bg-card/80 backdrop-blur-sm p-4 rounded-lg border border-primary/30 hover:border-primary transition-all duration-300"
+                  className="bg-card/80 backdrop-blur-sm p-3 rounded-lg border border-primary/30 hover:border-primary transition-all duration-300"
                   style={{ 
                     boxShadow: `0 0 20px ${accentColor}30`,
                   }}
@@ -430,15 +366,15 @@ const EventCard3D: React.FC<EventCard3DProps> = ({
                     boxShadow: `0 0 30px ${accentColor}50`,
                   }}
                 >
-                  <p className="font-semibold text-foreground">{coord.name}</p>
-                  <p className="text-sm text-muted-foreground">{coord.phone}</p>
-                  <p className="text-sm font-medium" style={{ color: accentColor }}>{coord.year}</p>
+                  <p className="font-semibold text-foreground text-sm">{coord.name}</p>
+                  <p className="text-xs text-muted-foreground">{coord.phone}</p>
+                  <p className="text-xs font-medium" style={{ color: accentColor }}>{coord.year}</p>
                 </motion.div>
               ))}
             </div>
             
             <motion.button
-              className="mt-6 w-full py-3 px-6 rounded-lg font-semibold text-white transition-all duration-300"
+              className="mt-4 w-full py-2.5 px-6 rounded-lg font-semibold text-white transition-all duration-300"
               style={{ 
                 backgroundColor: accentColor,
                 boxShadow: `0 0 20px ${accentColor}40`,
@@ -458,21 +394,13 @@ const EventCard3D: React.FC<EventCard3DProps> = ({
                 
                 // Route to appropriate event site
                 if (title === "Brand-o-Vation") {
-                  eventUrl = import.meta.env.DEV 
-                    ? "http://localhost:3000" 
-                    : "/brand-o-vation-site/";
+                  eventUrl = "https://brand-o-vation.vercel.app/";
                 } else if (title === "Ventura") {
-                  eventUrl = import.meta.env.DEV 
-                    ? "http://localhost:4000" 
-                    : "/ventura-site/";
+                  eventUrl = "https://ventura-zeta.vercel.app/";
                 } else if (title === "The Paradox Protocol") {
-                  eventUrl = import.meta.env.DEV 
-                    ? "http://localhost:5000" 
-                    : "/paradox-protocol-site/";
+                  eventUrl = "https://paradox-protocol-theta.vercel.app/";
                 } else if (title === "Capitalyze") {
-                  eventUrl = import.meta.env.DEV 
-                    ? "http://localhost:6000" 
-                    : "/capitalyze-site/";
+                  eventUrl = "https://capitalyze.vercel.app/";
                 } else {
                   // Handle registration for other events
                   alert(`Registration for ${title} coming soon!`);
@@ -517,31 +445,106 @@ const EventCard3D: React.FC<EventCard3DProps> = ({
         </motion.div>
       </motion.div>
 
-      {/* Enhanced Floating Particles Effect */}
-      {(isHovered || isFocused) && (
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(8)].map((_, i) => (
+      {/* Enhanced Edge Sparks Effect */}
+      {isHovered && (
+        <div className="absolute -inset-8 pointer-events-none z-50 overflow-visible">
+          {/* Top edge sparks */}
+          {[...Array(25)].map((_, i) => (
             <motion.div
-              key={i}
-              className="absolute w-3 h-3 rounded-full"
+              key={`top-${i}`}
+              className="absolute w-4 h-4 rounded-full"
               style={{ 
-                background: `linear-gradient(45deg, ${accentColor}, ${accentColor}80)`,
-                left: `${15 + i * 12}%`,
-                top: `${25 + (i % 4) * 18}%`,
-                boxShadow: `0 0 10px ${accentColor}`,
+                background: `radial-gradient(circle, #fff, #fff, ${accentColor}, ${accentColor}80)`,
+                left: `${i * 4}%`,
+                top: '-4px',
+                boxShadow: `0 0 30px ${accentColor}, 0 0 50px ${accentColor}, 0 0 70px ${accentColor}, 0 0 100px ${accentColor}60`,
+                filter: 'brightness(2)',
               }}
               animate={{
-                y: [-15, -45, -15],
-                x: [0, (i % 2 ? 10 : -10), 0],
-                opacity: [0.4, 1, 0.4],
-                scale: [0.6, 1.4, 0.6],
-                rotate: [0, 360, 0],
+                x: [-15, 15, -15],
+                opacity: [0.9, 1, 0.9],
+                scale: [1.2, 2.5, 1.2],
               }}
               transition={{
-                duration: 2.5 + i * 0.4,
+                duration: 0.8 + i * 0.05,
                 repeat: Infinity,
                 ease: "easeInOut",
-                delay: i * 0.1,
+                delay: i * 0.03,
+              }}
+            />
+          ))}
+          {/* Bottom edge sparks */}
+          {[...Array(25)].map((_, i) => (
+            <motion.div
+              key={`bottom-${i}`}
+              className="absolute w-4 h-4 rounded-full"
+              style={{ 
+                background: `radial-gradient(circle, #fff, #fff, ${accentColor}, ${accentColor}80)`,
+                left: `${i * 4}%`,
+                bottom: '-4px',
+                boxShadow: `0 0 30px ${accentColor}, 0 0 50px ${accentColor}, 0 0 70px ${accentColor}, 0 0 100px ${accentColor}60`,
+                filter: 'brightness(2)',
+              }}
+              animate={{
+                x: [15, -15, 15],
+                opacity: [0.9, 1, 0.9],
+                scale: [1.2, 2.5, 1.2],
+              }}
+              transition={{
+                duration: 0.8 + i * 0.05,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: i * 0.03 + 0.2,
+              }}
+            />
+          ))}
+          {/* Left edge sparks */}
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={`left-${i}`}
+              className="absolute w-4 h-4 rounded-full"
+              style={{ 
+                background: `radial-gradient(circle, #fff, #fff, ${accentColor}, ${accentColor}80)`,
+                left: '-4px',
+                top: `${i * 5}%`,
+                boxShadow: `0 0 30px ${accentColor}, 0 0 50px ${accentColor}, 0 0 70px ${accentColor}, 0 0 100px ${accentColor}60`,
+                filter: 'brightness(2)',
+              }}
+              animate={{
+                y: [-15, 15, -15],
+                opacity: [0.9, 1, 0.9],
+                scale: [1.2, 2.5, 1.2],
+              }}
+              transition={{
+                duration: 0.9 + i * 0.05,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: i * 0.04,
+              }}
+            />
+          ))}
+          {/* Right edge sparks */}
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={`right-${i}`}
+              className="absolute w-4 h-4 rounded-full"
+              style={{ 
+                background: `radial-gradient(circle, #fff, #fff, ${accentColor}, ${accentColor}80)`,
+                right: '-4px',
+                top: `${i * 5}%`,
+                boxShadow: `0 0 30px ${accentColor}, 0 0 50px ${accentColor}, 0 0 70px ${accentColor}, 0 0 100px ${accentColor}60`,
+                filter: 'brightness(2)',
+              }}
+              animate={{
+                y: [15, -15, 15],
+                opacity: [0.9, 1, 0.9],
+                scale: [1.2, 2.5, 1.2],
+              }}
+              transition={{
+                duration: 0.9 + i * 0.05,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: i * 0.04 + 0.15,
               }}
             />
           ))}
@@ -553,19 +556,19 @@ const EventCard3D: React.FC<EventCard3DProps> = ({
         {particles.map((particle) => (
           <motion.div
             key={particle.id}
-            className="absolute w-2 h-2 rounded-full"
+            className="absolute w-1.5 h-1.5 rounded-full"
             style={{
-              background: `radial-gradient(circle, ${accentColor}, transparent)`,
+              background: `radial-gradient(circle, ${accentColor}80, transparent)`,
               left: particle.x,
               top: particle.y,
-              boxShadow: `0 0 8px ${accentColor}`,
+              boxShadow: `0 0 4px ${accentColor}40`,
             }}
             animate={{
-              opacity: [1, 0],
-              scale: [0.5, 1.5, 0],
+              opacity: [0.6, 0],
+              scale: [0.3, 1, 0],
             }}
             transition={{
-              duration: 2,
+              duration: 2.5,
               ease: "easeOut",
             }}
           />
@@ -577,11 +580,11 @@ const EventCard3D: React.FC<EventCard3DProps> = ({
         <motion.div
           className="absolute inset-0 rounded-2xl pointer-events-none"
           style={{
-            boxShadow: `0 0 40px ${accentColor}, inset 0 0 40px ${accentColor}20`,
+            boxShadow: `0 0 20px ${accentColor}40, inset 0 0 20px ${accentColor}10`,
           }}
           animate={{
-            scale: [1, 1.05, 1],
-            opacity: [0.6, 1, 0.6],
+            scale: [1, 1.02, 1],
+            opacity: [0.3, 0.5, 0.3],
           }}
           transition={{
             duration: 2,
@@ -591,30 +594,136 @@ const EventCard3D: React.FC<EventCard3DProps> = ({
         />
       )}
 
-      {/* Enhanced 3D Shadow with Depth - hidden during flip and hover */}
-      {!isFlipped && (
+      {/* Corner Sparks - Appears on hover */}
+      {isHovered && (
         <motion.div
-          className="absolute inset-0 rounded-2xl"
+          className="absolute pointer-events-none"
           style={{
-            transform: "translateZ(-15px)",
-            background: `linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2))`,
-            filter: "blur(15px)",
+            inset: '-8px',
+            zIndex: 100,
           }}
-          initial={false}
-          animate={{
-            opacity: (isFlipping || isHovered) ? 0 : (isFocused ? 0.9 : 0.4),
-            scale: isFocused ? 1.2 : 1,
-            x: isFocused ? 15 : 0,
-            y: isFocused ? 15 : 0,
-          }}
-          transition={{ 
-            opacity: { duration: 0.4, ease: "easeInOut" },
-            scale: { duration: 0.6 },
-            x: { duration: 0.6 },
-            y: { duration: 0.6 }
-          }}
-        />
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.15 }}
+        >
+          {/* Top-left corner sparks */}
+          {[...Array(2)].map((_, i) => (
+            <motion.div
+              key={`corner-tl-${i}`}
+              className="absolute"
+              style={{ 
+                width: '12px',
+                height: '12px',
+                background: `radial-gradient(circle, #fff, ${accentColor}, transparent)`,
+                left: '5%',
+                top: '5%',
+                boxShadow: `0 0 35px ${accentColor}, 0 0 60px ${accentColor}`,
+                filter: 'brightness(2.5)',
+                borderRadius: '50%',
+              }}
+              animate={{
+                x: [-8 - i * 5, -12 - i * 8],
+                y: [10, 80 + i * 30],
+                scale: [1, 0.5],
+                opacity: [1, 0.7, 0],
+              }}
+              transition={{
+                duration: 1.4,
+                ease: [0.3, 0.9, 0.5, 1],
+                delay: i * 0.15,
+              }}
+            />
+          ))}
+          
+          {/* Top-right corner sparks */}
+          {[...Array(2)].map((_, i) => (
+            <motion.div
+              key={`corner-tr-${i}`}
+              className="absolute"
+              style={{ 
+                width: '12px',
+                height: '12px',
+                background: `radial-gradient(circle, #fff, ${accentColor}, transparent)`,
+                right: '5%',
+                top: '5%',
+                boxShadow: `0 0 35px ${accentColor}, 0 0 60px ${accentColor}`,
+                filter: 'brightness(2.5)',
+                borderRadius: '50%',
+              }}
+              animate={{
+                x: [8 + i * 5, 12 + i * 8],
+                y: [10, 80 + i * 30],
+                scale: [1, 0.5],
+                opacity: [1, 0.7, 0],
+              }}
+              transition={{
+                duration: 1.4,
+                ease: [0.3, 0.9, 0.5, 1],
+                delay: i * 0.15 + 0.1,
+              }}
+            />
+          ))}
+          
+          {/* Bottom-left corner sparks */}
+          {[...Array(2)].map((_, i) => (
+            <motion.div
+              key={`corner-bl-${i}`}
+              className="absolute"
+              style={{ 
+                width: '12px',
+                height: '12px',
+                background: `radial-gradient(circle, #fff, ${accentColor}, transparent)`,
+                left: '5%',
+                bottom: '5%',
+                boxShadow: `0 0 35px ${accentColor}, 0 0 60px ${accentColor}`,
+                filter: 'brightness(2.5)',
+                borderRadius: '50%',
+              }}
+              animate={{
+                x: [-8 - i * 5, -12 - i * 8],
+                y: [10, 80 + i * 30],
+                scale: [1, 0.5],
+                opacity: [1, 0.7, 0],
+              }}
+              transition={{
+                duration: 1.4,
+                ease: [0.3, 0.9, 0.5, 1],
+                delay: i * 0.15 + 0.2,
+              }}
+            />
+          ))}
+          
+          {/* Bottom-right corner sparks */}
+          {[...Array(2)].map((_, i) => (
+            <motion.div
+              key={`corner-br-${i}`}
+              className="absolute"
+              style={{ 
+                width: '12px',
+                height: '12px',
+                background: `radial-gradient(circle, #fff, ${accentColor}, transparent)`,
+                right: '5%',
+                bottom: '5%',
+                boxShadow: `0 0 35px ${accentColor}, 0 0 60px ${accentColor}`,
+                filter: 'brightness(2.5)',
+                borderRadius: '50%',
+              }}
+              animate={{
+                x: [8 + i * 5, 12 + i * 8],
+                y: [10, 80 + i * 30],
+                scale: [1, 0.5],
+                opacity: [1, 0.7, 0],
+              }}
+              transition={{
+                duration: 1.4,
+                ease: [0.3, 0.9, 0.5, 1],
+                delay: i * 0.15 + 0.3,
+              }}
+            />
+          ))}
+        </motion.div>
       )}
+
     </motion.div>
   );
 };

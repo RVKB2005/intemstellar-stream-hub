@@ -1,100 +1,53 @@
-import { Sparkles, Trophy, Users, Zap } from "lucide-react";
-import FadeInSection from "./FadeInSection";
+import { Button } from '@/components/ui/button';
+import { ExternalLink } from 'lucide-react';
 
 const About = () => {
-  const features = [
-    {
-      icon: Sparkles,
-      title: "Creativity Unleashed",
-      description: "Explore innovative concepts inspired by the most captivating web series",
-    },
-    {
-      icon: Trophy,
-      title: "Compete & Win",
-      description: "Showcase your skills and compete for exciting prizes and recognition",
-    },
-    {
-      icon: Users,
-      title: "Intercollegiate",
-      description: "Connect with talented students from colleges across the region",
-    },
-    {
-      icon: Zap,
-      title: "Innovation First",
-      description: "Push boundaries and reimagine storytelling through technology and design",
-    },
-  ];
-
   return (
-    <section 
-      id="about" 
-      className="py-24 relative overflow-hidden" 
-      style={{ 
-        scrollMarginTop: '80px',
-      }}
-    >
-      
-      {/* Decorative Elements */}
-      <div className="absolute top-10 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
-
-      <div className="container mx-auto px-6 relative z-10">
-        <FadeInSection>
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-6xl font-bold mb-4 animate-fade-in-up hover:scale-102 transition-transform duration-300 cursor-default">
-            About <span className="text-primary">InTEMStellar</span>
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-            InTEMStellar is an intercollegiate symposium celebrating creativity, storytelling, and innovation inspired by the world of web series. Join us for an unforgettable experience that blends entertainment, technology, and competition.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <div
-                key={feature.title}
-                className="relative group animate-fade-in-up"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="bg-card border border-border rounded-xl p-6 h-full transition-all duration-300 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/20 hover:-translate-y-2 hover:scale-102 cursor-pointer">
-                  <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
-                    <Icon className="w-7 h-7 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-3 text-foreground">
-                    {feature.title}
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {feature.description}
-                  </p>
-                </div>
+    <section id="about" className="relative py-12 sm:py-16 md:py-20 overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+        <div className="space-y-8">
+          {/* Text Content */}
+          <div className="space-y-6 text-center md:text-left">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-8">
+              About IEEE <span className="text-primary">TEMS</span> Sairam Chapter
+            </h2>
+            
+            <div className="glass rounded-2xl p-8 sm:p-12 shadow-card" style={{ backgroundColor: 'rgba(0, 7, 45, 0.8)' }}>
+              <div className="space-y-6 text-muted-foreground">
+                <h3 className="text-xl sm:text-2xl font-bold text-foreground">Our Story</h3>
+                
+                <p className="text-base sm:text-lg leading-relaxed">
+                  The IEEE Technology and Engineering Management Society provides information and services to practitioners and researchers engaged in management sciences.
+                </p>
+                
+                <p className="text-base sm:text-lg leading-relaxed">
+                  IEEE TEMS helps members maintain vital engineering management skills, ensuring they stay current in an evolving field. The society supports the leadership career paths of IEEE members by providing resources and development opportunities.
+                </p>
+                
+                <p className="text-base sm:text-lg leading-relaxed">
+                  It also fosters active knowledge transfer between academia and industry, promoting collaboration and innovation across both communities.
+                </p>
               </div>
-            );
-          })}
-        </div>
-
-        {/* Stats Section */}
-        <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8">
-          {[
-            { number: "4", label: "Epic Events" },
-            { number: "500+", label: "Participants" },
-            { number: "50+", label: "Colleges" },
-            { number: "₹1L+", label: "Prizes" },
-          ].map((stat, index) => (
-            <div
-              key={stat.label}
-              className="text-center animate-fade-in-up group cursor-default"
-              style={{ animationDelay: `${0.4 + index * 0.1}s` }}
-            >
-              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">
-                {stat.number}
+              
+              <div className="mt-8 flex justify-center md:justify-start">
+                <Button
+                  asChild
+                  className="bg-primary hover:bg-primary/90 text-white"
+                >
+                  <a
+                    href="https://edu.ieee.org/in-sairamtems"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2"
+                  >
+                    View TEMS
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
+                </Button>
               </div>
-              <div className="text-muted-foreground font-medium">{stat.label}</div>
             </div>
-          ))}
+          </div>
         </div>
-        </FadeInSection>
       </div>
     </section>
   );

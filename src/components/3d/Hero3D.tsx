@@ -114,7 +114,7 @@ const Hero3DText: React.FC = () => {
     <group ref={textGroupRef}>
       <Center>
         <group>
-          {/* "In" part with gradient effect */}
+          {/* "IN" part with gradient effect */}
           <Text3D
             font="/fonts/helvetiker_regular.typeface.json"
             size={1.2}
@@ -127,7 +127,7 @@ const Hero3DText: React.FC = () => {
             bevelSegments={5}
             position={[-4.5, 0, 0]}
           >
-            In
+            IN
             <meshStandardMaterial
               color="#ffffff"
               metalness={0.3}
@@ -160,7 +160,7 @@ const Hero3DText: React.FC = () => {
             />
           </Text3D>
 
-          {/* "tellar" part with gradient effect */}
+          {/* "TELLAR" part with gradient effect */}
           <Text3D
             font="/fonts/helvetiker_regular.typeface.json"
             size={1.2}
@@ -173,7 +173,7 @@ const Hero3DText: React.FC = () => {
             bevelSegments={5}
             position={[0.5, 0, 0]}
           >
-            tellar
+            TELLAR
             <meshStandardMaterial
               color="#ffffff"
               metalness={0.3}
@@ -282,32 +282,34 @@ const Hero3D: React.FC = () => {
       
       {/* Content Overlay with Spectacular Entrance */}
       <div className="container mx-auto px-6 text-center z-10 mt-20 hardware-accelerated">
-        {/* Main Title */}
+        {/* Main Title - Line 1 */}
         <h1 
-          className="text-6xl md:text-8xl font-bold mb-8 opacity-0 hardware-accelerated"
+          className="text-3xl md:text-5xl font-bold mb-4 opacity-0 hardware-accelerated"
           style={{ 
             animation: "spectacularFadeInUp 0.8s ease-out 0.2s forwards",
           }}
         >
-          In<span className="text-primary">TEMS</span>tellar
+          WELCOME TO
         </h1>
         
-        {/* Subtitle and description with dramatic entrance */}
+        {/* Main Title - Line 2 */}
+        <h2 
+          className="text-3xl md:text-5xl font-bold mb-8 opacity-0 hardware-accelerated" 
+          style={{ 
+            animation: "spectacularFadeInUp 0.7s ease-out 0.3s forwards",
+          }}
+        >
+          IN<span className="text-primary">TEMS</span>TELLAR CHAPTER 1
+        </h2>
+        
+        {/* Description with dramatic entrance */}
         <p 
-          className="text-xl md:text-3xl text-muted-foreground mb-4 opacity-0 transform translate-y-10 hover:text-foreground transition-colors duration-500 hardware-accelerated" 
+          className="text-xl md:text-2xl font-semibold text-foreground/80 mb-10 max-w-3xl mx-auto opacity-0 transform translate-y-10 hover:text-foreground transition-colors duration-500 hardware-accelerated leading-relaxed" 
           style={{ 
             animation: "spectacularFadeInUp 0.7s ease-out 0.4s forwards",
           }}
         >
-          Where Creativity Streams Beyond Limits
-        </p>
-        <p 
-          className="text-lg md:text-xl text-foreground/70 mb-10 max-w-3xl mx-auto opacity-0 transform translate-y-10 hover:text-foreground transition-colors duration-500 hardware-accelerated" 
-          style={{ 
-            animation: "spectacularFadeInUp 0.7s ease-out 0.6s forwards",
-          }}
-        >
-          An intercollegiate symposium celebrating innovation, storytelling, and creativity inspired by the world of web series
+          AN IEEE TEMS SYMPOSIUM EXPERIENCE
         </p>
         
         {/* Action Buttons with same entrance as text */}
@@ -319,7 +321,7 @@ const Hero3D: React.FC = () => {
         >
           <Button
             size="lg"
-            className="interactive btn-interactive click-ripple bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg px-8 py-6 shadow-xl hover:shadow-primary/50 transition-all duration-500 hardware-accelerated"
+            className="interactive btn-interactive click-ripple bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg px-8 py-6 shadow-xl transition-all duration-500 hardware-accelerated"
             onClick={handleExploreClick}
           >
             Explore Events
@@ -328,6 +330,7 @@ const Hero3D: React.FC = () => {
             size="lg"
             variant="outline"
             className="interactive btn-interactive click-ripple border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-bold text-lg px-8 py-6 transition-all duration-500 hardware-accelerated"
+            onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
           >
             Learn More
           </Button>

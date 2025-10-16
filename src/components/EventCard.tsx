@@ -32,6 +32,8 @@ const EventCard = ({ title, theme, tagline, coordinators, image, accentColor, de
           src={image}
           alt={title}
           className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-125 group-hover:rotate-2 group-hover:blur-sm"
+          style={{ willChange: 'transform, filter' }}
+          loading="lazy"
         />
         {/* Gradient Overlay */}
         <div

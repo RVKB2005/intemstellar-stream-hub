@@ -17,7 +17,7 @@ All colors MUST be HSL.
     --popover: 220 20% 10%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 100% 60%;
+    --primary: 197 100% 50%;
     --primary-foreground: 220 20% 8%;
 
     --secondary: 220 15% 18%;
@@ -37,6 +37,11 @@ All colors MUST be HSL.
     --ring: 210 100% 60%;
 
     --radius: 0.75rem;
+    
+    /* Contact Section Variables */
+    --shadow-glow: 0 0 40px hsla(197, 100%, 50%, 0.3);
+    --shadow-card: 0 10px 30px -10px hsla(0, 0%, 0%, 0.5);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     /* Web Series Cosmic Theme Colors */
     --tems-blue: 210 100% 60%;
@@ -115,9 +120,30 @@ All colors MUST be HSL.
     position: relative;
     -webkit-user-select: none;
     user-select: none;
+    overscroll-behavior: none;
+    min-height: 100vh;
   }
 
   body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background-image: url('./assets/hero-bg1.jpg');
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+    background-position: 0 0;
+    animation: scroll-bg 60s linear infinite;
+    pointer-events: none;
+    z-index: -2;
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  body::after {
     content: '';
     position: fixed;
     top: 0;
@@ -135,46 +161,70 @@ All colors MUST be HSL.
     animation: cosmic-drift 30s linear infinite;
     pointer-events: none;
     z-index: -1;
+    will-change: background-position;
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    overflow-x: hidden;
+    overscroll-behavior: none;
   }
 }
 
 @layer utilities {
   .text-glow {
-    /* Text glow removed */
+    /* Glow removed */
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .shadow-glow {
+    /* Glow removed */
+  }
+
+  .shadow-card {
+    /* Glow removed */
   }
 
   .card-glow {
-    box-shadow: 0 0 30px hsl(var(--primary) / 0.3);
+    /* Glow removed */
   }
 
   .card-glow-pink {
-    box-shadow: 0 0 30px hsl(var(--neon-pink) / 0.4);
+    /* Glow removed */
   }
 
   .animate-float {
     animation: float 6s ease-in-out infinite;
+    will-change: transform;
   }
 
   .animate-fly-in {
     animation: fly-in 1.5s ease-out forwards;
+    will-change: transform, opacity;
   }
 
   .animate-marquee {
     animation: marquee 30s linear infinite;
+    will-change: transform;
   }
 
   .animate-pulse-slow {
     animation: pulse-slow 3s ease-in-out infinite;
+    will-change: opacity;
   }
 
   .animate-shimmer {
     animation: shimmer 2s linear infinite;
+    will-change: transform;
   }
 
   @keyframes pulse-slow {
@@ -197,35 +247,36 @@ All colors MUST be HSL.
 
   @keyframes float {
     0%, 100% {
-      transform: translateY(0px);
+      transform: translateY(0px) translateZ(0);
     }
     50% {
-      transform: translateY(-20px);
+      transform: translateY(-20px) translateZ(0);
     }
   }
 
   @keyframes fly-in {
     from {
-      transform: translateX(-200%) rotate(-10deg);
+      transform: translateX(-200%) rotate(-10deg) translateZ(0);
       opacity: 0;
     }
     to {
-      transform: translateX(0) rotate(0deg);
+      transform: translateX(0) rotate(0deg) translateZ(0);
       opacity: 1;
     }
   }
 
   @keyframes marquee {
     0% {
-      transform: translateX(0);
+      transform: translateX(0) translateZ(0);
     }
     100% {
-      transform: translateX(-50%);
+      transform: translateX(-50%) translateZ(0);
     }
   }
 
   .hover-tilt {
     transition: transform 0.5s ease, box-shadow 0.5s ease;
+    will-change: transform;
   }
 
   .hover-tilt:hover {
@@ -234,10 +285,11 @@ All colors MUST be HSL.
 
   .interactive-card {
     transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    will-change: transform;
   }
 
   .interactive-card:hover {
-    transform: translateY(-10px) scale(1.03);
+    transform: translateY(-10px) scale(1.03) translateZ(0);
   }
 
   /* 3D Transform Utilities */
@@ -264,15 +316,17 @@ All colors MUST be HSL.
   /* 3D Card Flip Animation */
   .card-flip {
     transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    will-change: transform;
   }
 
   .card-flip.flipped {
-    transform: rotateY(180deg);
+    transform: rotateY(180deg) translateZ(0);
   }
 
   /* Enhanced 3D Hover Effects */
   .card-3d-hover {
     transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+    will-change: transform;
   }
 
   .card-3d-hover:hover {
@@ -325,38 +379,26 @@ All colors MUST be HSL.
     background-clip: text;
   }
 
-  /* Cosmic Glow Effects */
+  /* Cosmic Glow Effects - Removed */
   .glow-tems {
-    box-shadow: var(--glow-tems-blue);
+    /* Glow removed */
   }
 
   .glow-cosmic {
-    box-shadow: var(--glow-cosmic);
+    /* Glow removed */
   }
 
   .glow-electric {
-    box-shadow: var(--glow-electric);
+    /* Glow removed */
   }
 
   .glow-streaming {
-    box-shadow: var(--glow-streaming);
+    /* Glow removed */
   }
 
-  /* Star Particle Effects */
+  /* Star Particle Effects - Removed */
   .star-twinkle {
-    box-shadow: var(--star-twinkle);
-    animation: twinkle 2s ease-in-out infinite alternate;
-  }
-
-  @keyframes twinkle {
-    0% {
-      opacity: 0.7;
-      transform: scale(1);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1.1);
-    }
+    /* Glow removed */
   }
 
   /* Streaming Blue Accents */
@@ -400,6 +442,7 @@ All colors MUST be HSL.
     background-repeat: repeat;
     background-size: 200px 100px;
     animation: cosmic-drift 20s linear infinite;
+    will-change: background-position;
   }
 
   @keyframes cosmic-drift {
@@ -408,6 +451,15 @@ All colors MUST be HSL.
     }
     100% {
       background-position: 200px 100px;
+    }
+  }
+
+  @keyframes scroll-bg {
+    0% {
+      transform: translateX(0) translateZ(0);
+    }
+    100% {
+      transform: translateX(-50%) translateZ(0);
     }
   }
 
@@ -437,6 +489,7 @@ All colors MUST be HSL.
     position: relative;
     overflow: hidden;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
   }
 
   .interactive::before {
@@ -448,9 +501,10 @@ All colors MUST be HSL.
     height: 0;
     background: radial-gradient(circle, hsl(var(--streaming-blue) / 0.3), transparent);
     border-radius: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) translateZ(0);
     transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
+    will-change: width, height;
   }
 
   .interactive:hover::before {
@@ -463,14 +517,12 @@ All colors MUST be HSL.
   .btn-interactive {
     transform-style: preserve-3d;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    will-change: transform;
   }
 
   button.interactive:hover,
   .btn-interactive:hover {
     transform: perspective(1000px) rotateX(-5deg) rotateY(5deg) translateY(-5px) translateZ(20px) scale(1.05);
-    box-shadow: 
-      0 20px 40px hsl(var(--primary) / 0.3),
-      0 0 30px hsl(var(--streaming-blue) / 0.5);
   }
 
   button.interactive:active,

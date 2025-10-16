@@ -235,7 +235,7 @@ const Header3D: React.FC = () => {
           <motion.a
             ref={logoRef}
             href="#home"
-            className="text-2xl md:text-3xl font-bold tracking-tight relative group"
+            className="text-xl md:text-2xl font-bold tracking-tight relative group"
             style={{
               transformStyle: "preserve-3d",
               perspective: "1200px",
@@ -248,7 +248,7 @@ const Header3D: React.FC = () => {
               transition: { duration: 0.4, ease: "backOut" }
             }}
           >
-            {/* "In" with subtle animation */}
+            {/* "IN" with subtle animation */}
             <motion.span 
               className="inline-block"
               animate={{
@@ -260,21 +260,21 @@ const Header3D: React.FC = () => {
                 ease: "easeInOut"
               }}
             >
-              In
+              IN
             </motion.span>
             
-            {/* "TEMS" - blue without glow, NO ROTATION */}
-            <span className="text-blue-500 inline-block relative">
+            {/* "TEMS" - blue with slight 3D effect */}
+            <span className="text-primary inline-block relative">
               TEMS
               
-              {/* 3D depth layers for TEMS */}
+              {/* Slight 3D depth layer */}
               <motion.span
-                className="absolute inset-0 text-blue-400 -z-10"
+                className="absolute inset-0 text-primary/40 -z-10"
                 style={{
-                  transform: "translateZ(-2px) translateX(1px) translateY(1px)",
+                  transform: "translateZ(-1px) translateX(1px) translateY(1px)",
                 }}
                 animate={{
-                  opacity: [0.3, 0.6, 0.3],
+                  opacity: [0.3, 0.5, 0.3],
                 }}
                 transition={{
                   duration: 3,
@@ -284,26 +284,9 @@ const Header3D: React.FC = () => {
               >
                 TEMS
               </motion.span>
-              <motion.span
-                className="absolute inset-0 text-blue-300 -z-20"
-                style={{
-                  transform: "translateZ(-4px) translateX(2px) translateY(2px)",
-                }}
-                animate={{
-                  opacity: [0.2, 0.4, 0.2],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 0.5
-                }}
-              >
-                TEMS
-              </motion.span>
             </span>
             
-            {/* "tellar" with wave animation */}
+            {/* "TELLAR" with wave animation */}
             <motion.span 
               className="inline-block"
               animate={{
@@ -317,7 +300,7 @@ const Header3D: React.FC = () => {
                 delay: 1
               }}
             >
-              tellar
+              TELLAR
             </motion.span>
             
             {/* Complex floating geometric shapes with 3D movement */}
@@ -532,7 +515,10 @@ const Header3D: React.FC = () => {
                 perspective: "1000px",
               }}
             >
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 shadow-lg hover:shadow-primary/50 transition-all relative overflow-hidden">
+              <Button 
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 shadow-lg transition-all relative overflow-hidden"
+                onClick={() => document.getElementById("events")?.scrollIntoView({ behavior: "smooth" })}
+              >
                 <span className="relative z-10">Register Now</span>
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600"
@@ -630,7 +616,13 @@ const Header3D: React.FC = () => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.4, delay: navLinks.length * 0.1 }}
               >
-                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-lg w-full">
+                <Button 
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-lg w-full"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    document.getElementById("events")?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                >
                   Register Now
                 </Button>
               </motion.div>

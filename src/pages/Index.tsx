@@ -20,12 +20,9 @@ const Contact = lazy(() => import("@/components/Contact"));
 const Index = () => {
   return (
     <div 
-      className="min-h-screen bg-background text-foreground relative"
+      className="min-h-screen text-foreground relative"
       style={{
-        backgroundImage: 'linear-gradient(to bottom, rgba(18, 18, 23, 0.7), rgba(18, 18, 23, 0.85)), url(/src/assets/hero-bg.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center top',
-        backgroundAttachment: 'fixed',
+        background: 'linear-gradient(to bottom, rgba(0, 7, 45, 0.75), rgba(0, 7, 45, 0.86))',
       }}
     >
       {/* Global 3D Scene with Hero 3D content - Reduced particle count for better performance */}

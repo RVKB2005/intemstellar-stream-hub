@@ -28,7 +28,7 @@ const Coordinators = () => {
 
   useEffect(() => {
     const cards = sectionRef.current?.querySelectorAll('.coordinator-card');
-    
+
     if (cards) {
       gsap.fromTo(
         cards,
@@ -67,16 +67,16 @@ const Coordinators = () => {
               <div className="mb-3 md:mb-4 inline-block p-3 md:p-4 bg-accent/20 rounded-full">
                 <User className="w-6 h-6 md:w-8 md:h-8 text-accent" />
               </div>
-              
+
               <h3 className="text-xl md:text-2xl font-bold mb-2 text-foreground group-hover:text-accent transition-colors">
                 {coordinator.name}
               </h3>
-              
+
               <div className="flex items-center gap-2 text-primary mb-2">
                 <Phone className="w-4 h-4" />
                 <span className="text-base md:text-lg">{coordinator.phone}</span>
               </div>
-              
+
               <div className="inline-block px-3 py-1 bg-background rounded-md">
                 <span className="text-xs md:text-sm text-muted-foreground">{coordinator.year}</span>
               </div>
