@@ -1,82 +1,85 @@
-import { Mail, Phone, MapPin, Instagram, Linkedin, Twitter } from "lucide-react";
-import FadeInSection from "./FadeInSection";
+import { MapPin, Phone, Instagram } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const Contact = () => {
   return (
-    <section 
-      id="contact" 
-      className="py-24 relative overflow-hidden" 
-      style={{ 
-        scrollMarginTop: '80px',
-      }}
-    >
-      <div className="container mx-auto px-6 relative z-10">
-        <FadeInSection>
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-6xl font-bold mb-4 animate-fade-in-up hover:scale-102 transition-transform duration-300 cursor-default">
-            Get In <span className="text-primary">Touch</span>
+    <section id="contact" className="py-12 sm:py-16 md:py-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-8 sm:mb-12 md:mb-16">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-4">
+            Reach <span className="text-primary">Us</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-            Have questions? Want to participate? Reach out to us!
-          </p>
         </div>
 
-        <div className="flex flex-col items-center gap-8 max-w-2xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Info */}
-          <div className="w-full bg-card border border-border rounded-xl p-6 transition-all duration-300 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/20 hover:scale-105 animate-fade-in-up" style={{ animationDelay: "0.15s" }}>
-            <h3 className="text-2xl font-bold mb-6 text-foreground text-center">Contact Information</h3>
-            <div className="space-y-4">
-              <div className="flex items-start gap-4 group cursor-pointer hover:translate-x-2 transition-transform duration-300">
-                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300">
-                  <Mail className="w-5 h-5 text-primary" />
-                </div>
+          <div className="space-y-8">
+            <div className="glass rounded-2xl p-6 sm:p-8 shadow-card" style={{ backgroundColor: 'rgba(0, 7, 45, 0.8)' }}>
+              <div className="flex items-start gap-4">
+                <MapPin className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
                 <div>
-                  <p className="font-semibold text-foreground">Email</p>
-                  <p className="text-muted-foreground">intemstellar@tems.edu</p>
+                  <h3 className="text-xl font-bold mb-2">Address</h3>
+                  <p className="text-muted-foreground">
+                    Sai Leo Nagar, West Tambaram,<br />
+                    Chennai – 600 044.<br />
+                    Tamil Nadu, India.
+                  </p>
                 </div>
               </div>
-              <div className="flex items-start gap-4 group cursor-pointer hover:translate-x-2 transition-transform duration-500">
-                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">
-                  <Phone className="w-5 h-5 text-primary" />
-                </div>
+            </div>
+
+            <div className="glass rounded-2xl p-6 sm:p-8 shadow-card" style={{ backgroundColor: 'rgba(0, 7, 45, 0.8)' }}>
+              <div className="flex items-start gap-4">
+                <Phone className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
                 <div>
-                  <p className="font-semibold text-foreground">Phone</p>
-                  <p className="text-muted-foreground">+91 9791382086</p>
+                  <h3 className="text-xl font-bold mb-2">Contact</h3>
+                  <p className="text-muted-foreground">
+                    Chairperson: Sathish Kumar<br />
+                    <a href="tel:+919344805365" className="text-primary hover:underline">
+                      +91 93448 05365
+                    </a>
+                  </p>
                 </div>
               </div>
-              <div className="flex items-start gap-4 group cursor-pointer hover:translate-x-2 transition-transform duration-500">
-                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">
-                  <MapPin className="w-5 h-5 text-primary" />
-                </div>
+            </div>
+
+            <div className="glass rounded-2xl p-6 sm:p-8 shadow-card" style={{ backgroundColor: 'rgba(0, 7, 45, 0.8)' }}>
+              <div className="flex items-start gap-4">
+                <Instagram className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
                 <div>
-                  <p className="font-semibold text-foreground">Location</p>
-                  <p className="text-muted-foreground">TEMS Engineering College, Chennai</p>
+                  <h3 className="text-xl font-bold mb-2">Social Media</h3>
+                  <Button
+                    asChild
+                    variant="link"
+                    className="text-primary hover:text-primary/80 p-0 h-auto"
+                  >
+                    <a
+                      href="https://www.instagram.com/intemstellar/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      @intemstellar
+                    </a>
+                  </Button>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Social Media */}
-          <div className="w-full bg-card border border-border rounded-xl p-6 transition-all duration-300 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/20 hover:scale-105 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-            <h3 className="text-xl font-bold mb-4 text-foreground text-center">Follow Us</h3>
-            <div className="flex gap-4 justify-center">
-              {[
-                { icon: Instagram, label: "Instagram" },
-                { icon: Linkedin, label: "LinkedIn" },
-                { icon: Twitter, label: "Twitter" },
-              ].map(({ icon: Icon, label }) => (
-                <button
-                  key={label}
-                  className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center transition-all duration-300 group hover:scale-125 hover:rotate-12 active:scale-95"
-                  aria-label={label}
-                >
-                  <Icon className="w-5 h-5 text-primary" />
-                </button>
-              ))}
-            </div>
+          {/* Map */}
+          <div className="glass rounded-2xl overflow-hidden shadow-card" style={{ backgroundColor: 'rgba(0, 7, 45, 0.8)' }}>
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d248847.9142688746!2d80.090366!3d12.955934!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a52f596c7fb72c9%3A0x8e7a30529f9ef227!2sSri%20Sairam%20Engineering%20College!5e0!3m2!1sen!2sus!4v1760532783108!5m2!1sen!2sus"
+              width="100%"
+              height="100%"
+              style={{ border: 0, minHeight: '450px' }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Sri Sairam Engineering College Location"
+            />
           </div>
         </div>
-        </FadeInSection>
       </div>
     </section>
   );
