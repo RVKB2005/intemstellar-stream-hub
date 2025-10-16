@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { motion, useAnimation, useInView } from 'framer-motion';
+import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+import { motion, useAnimation, useReducedMotion } from 'framer-motion';
 
 interface AnimatedSectionProps {
   children: React.ReactNode;
@@ -13,6 +13,30 @@ interface AnimatedSectionProps {
   onAnimationStart?: () => void;
   onAnimationComplete?: () => void;
 }
+
+// Detect device performance capability
+const getDevicePerformance = (): 'low' | 'medium' | 'high' => {
+  if (typeof window === 'undefined') return 'medium';
+
+  // Check for reduced motion preference
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion) return 'low';
+
+  // Check hardware concurrency (CPU cores)
+  const cores = navigator.hardwareConcurrency || 4;
+
+  // Check device memory (if available)
+  const memory = (navigator as any).deviceMemory;
+
+  // Check for mobile device
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+  if (memory && memory < 4) return 'low';
+  if (isMobile && cores < 4) return 'low';
+  if (cores >= 8 && (!memory || memory >= 8)) return 'high';
+
+  return 'medium';
+};
 
 const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   children,
@@ -28,15 +52,33 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
 }) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const controls = useAnimation();
-  const isInView = useInView(sectionRef, {
-    once: true,
-    margin: `${-(1 - triggerOffset) * 100}% 0px 0px 0px`
-  });
+  const prefersReducedMotion = useReducedMotion();
   const [hasAnimated, setHasAnimated] = useState(false);
 
-  // Enhanced Intersection Observer for more precise control - START ANIMATIONS EARLIER
+  // Memoize device performance check
+  const devicePerformance = useMemo(() => getDevicePerformance(), []);
+
+  // Adjust settings based on device performance
+  const optimizedSettings = useMemo(() => {
+    const shouldEnable3D = enable3D && devicePerformance !== 'low';
+    const shouldEnableParticles = enableParticles && devicePerformance === 'high';
+    const adjustedDuration = devicePerformance === 'low' ? duration * 0.6 : duration;
+
+    return {
+      enable3D: shouldEnable3D,
+      enableParticles: shouldEnableParticles,
+      duration: adjustedDuration,
+      useGPU: devicePerformance !== 'low',
+    };
+  }, [enable3D, enableParticles, duration, devicePerformance]);
+
+  // Optimized Intersection Observer with performance considerations
   useEffect(() => {
-    if (!sectionRef.current) return;
+    if (!sectionRef.current || prefersReducedMotion) {
+      // Skip animation for reduced motion preference
+      controls.start('visible');
+      return;
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -52,35 +94,51 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
         });
       },
       {
-        threshold: 0.01, // Start immediately - as soon as 1% is visible
-        rootMargin: `200px 0px 0px 0px`, // Start 200px BEFORE element enters viewport
+        threshold: 0.01,
+        // Adjust root margin based on device performance
+        rootMargin: devicePerformance === 'low' ? '100px 0px 0px 0px' : '200px 0px 0px 0px',
       }
     );
 
     observer.observe(sectionRef.current);
 
     return () => observer.disconnect();
-  }, [triggerOffset, hasAnimated, controls, onAnimationStart]);
+  }, [triggerOffset, hasAnimated, controls, onAnimationStart, devicePerformance, prefersReducedMotion]);
 
-  // Enhanced animation variants with dramatic 3D effects
+  // Optimized animation variants with performance-based adjustments
   const getAnimationVariants = useCallback(() => {
+    // Simplified animations for reduced motion
+    if (prefersReducedMotion) {
+      return {
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: { duration: 0.3 }
+        }
+      };
+    }
+
     const intensityMultiplier = {
       light: 0.5,
       medium: 1,
-      heavy: 2,
+      heavy: devicePerformance === 'low' ? 1 : 2, // Reduce heavy intensity on low-end devices
     }[intensity];
+
+    const { enable3D: use3D, duration: adjustedDuration } = optimizedSettings;
 
     const baseVariants = {
       slide: {
         hidden: {
           opacity: 0,
+          y: devicePerformance === 'low' ? 20 : 30, // Simpler transform on low-end
         },
         visible: {
           opacity: 1,
+          y: 0,
           transition: {
-            duration: duration * 0.8,
+            duration: adjustedDuration * 0.8,
             ease: [0.25, 0.46, 0.45, 0.94] as const,
-            staggerChildren: 0.15,
+            staggerChildren: devicePerformance === 'low' ? 0.08 : 0.15,
             delayChildren: 0.1,
           }
         },
@@ -88,19 +146,19 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
       rotate: {
         hidden: {
           opacity: 0,
-          rotateX: enable3D ? -10 * intensityMultiplier : -5 * intensityMultiplier,
-          rotateY: enable3D ? 5 * intensityMultiplier : 0,
+          rotateX: use3D ? -10 * intensityMultiplier : 0,
+          rotateY: use3D ? 5 * intensityMultiplier : 0,
           scale: 0.95,
-          z: enable3D ? -20 : 0,
+          ...(use3D && { z: -20 }),
         },
         visible: {
           opacity: 1,
           rotateX: 0,
           rotateY: 0,
           scale: 1,
-          z: 0,
+          ...(use3D && { z: 0 }),
           transition: {
-            duration: duration * 0.5,
+            duration: adjustedDuration * 0.5,
             ease: [0.25, 0.46, 0.45, 0.94] as const,
             staggerChildren: 0.05,
           }
@@ -109,17 +167,17 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
       scale: {
         hidden: {
           opacity: 0,
-          scale: 0.1 * intensityMultiplier,
-          rotateZ: enable3D ? 180 : 90,
-          z: enable3D ? -300 : 0,
+          scale: devicePerformance === 'low' ? 0.8 : 0.1 * intensityMultiplier,
+          rotateZ: use3D ? (devicePerformance === 'low' ? 45 : 180) : 0,
+          ...(use3D && { z: devicePerformance === 'low' ? -50 : -300 }),
         },
         visible: {
           opacity: 1,
           scale: 1,
           rotateZ: 0,
-          z: 0,
+          ...(use3D && { z: 0 }),
           transition: {
-            duration: duration * 1.3,
+            duration: adjustedDuration * 1.3,
             ease: [0.175, 0.885, 0.32, 1.275] as const,
             staggerChildren: 0.08,
           }
@@ -129,11 +187,11 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
         hidden: {
           opacity: 0,
           scale: 0.3,
-          rotateY: enable3D ? 270 * intensityMultiplier : 180 * intensityMultiplier,
-          rotateX: enable3D ? 45 : 0,
-          skewX: 25,
-          skewY: enable3D ? 15 : 0,
-          z: enable3D ? -150 : 0,
+          rotateY: use3D ? (devicePerformance === 'low' ? 90 : 270) * intensityMultiplier : 0,
+          rotateX: use3D && devicePerformance !== 'low' ? 45 : 0,
+          skewX: devicePerformance === 'low' ? 10 : 25,
+          ...(use3D && devicePerformance !== 'low' && { skewY: 15 }),
+          ...(use3D && { z: devicePerformance === 'low' ? -50 : -150 }),
         },
         visible: {
           opacity: 1,
@@ -142,9 +200,9 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
           rotateX: 0,
           skewX: 0,
           skewY: 0,
-          z: 0,
+          ...(use3D && { z: 0 }),
           transition: {
-            duration: duration * 1.8,
+            duration: adjustedDuration * 1.8,
             ease: [0.23, 1, 0.32, 1] as const,
             staggerChildren: 0.12,
           }
@@ -153,11 +211,10 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
       explode: {
         hidden: {
           opacity: 0,
-          scale: 3 * intensityMultiplier,
-          rotate: enable3D ? 720 : 360,
-          rotateX: enable3D ? 180 : 0,
-          rotateY: enable3D ? 180 : 0,
-          z: enable3D ? 500 : 0,
+          scale: devicePerformance === 'low' ? 1.5 : 3 * intensityMultiplier,
+          rotate: use3D ? (devicePerformance === 'low' ? 180 : 720) : 0,
+          ...(use3D && devicePerformance !== 'low' && { rotateX: 180, rotateY: 180 }),
+          ...(use3D && { z: devicePerformance === 'low' ? 100 : 500 }),
         },
         visible: {
           opacity: 1,
@@ -165,9 +222,9 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
           rotate: 0,
           rotateX: 0,
           rotateY: 0,
-          z: 0,
+          ...(use3D && { z: 0 }),
           transition: {
-            duration: duration * 1.1,
+            duration: adjustedDuration * 1.1,
             ease: [0.19, 1, 0.22, 1] as const,
             staggerChildren: 0.05,
           }
@@ -176,7 +233,7 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
     };
 
     return baseVariants[animationType];
-  }, [animationType, intensity, duration, enable3D]);
+  }, [animationType, intensity, optimizedSettings, devicePerformance, prefersReducedMotion]);
 
   // Handle animation completion
   const handleAnimationComplete = useCallback(() => {
@@ -186,19 +243,27 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   return (
     <motion.div
       ref={sectionRef}
-      className={`${className} ${enable3D ? 'transform-gpu' : ''}`}
+      className={`${className} ${optimizedSettings.useGPU ? 'transform-gpu' : ''}`}
       initial="hidden"
       animate={controls}
       variants={getAnimationVariants()}
       onAnimationComplete={handleAnimationComplete}
       style={{
-        perspective: enable3D ? '1000px' : 'none',
-        transformStyle: enable3D ? 'preserve-3d' : 'flat',
+        perspective: optimizedSettings.enable3D ? '1000px' : 'none',
+        transformStyle: optimizedSettings.enable3D ? 'preserve-3d' : 'flat',
+        // Force GPU acceleration on capable devices
+        ...(optimizedSettings.useGPU && {
+          willChange: 'transform, opacity',
+        }),
       }}
     >
-      {enableParticles && (
+      {optimizedSettings.enableParticles && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <ParticleTrail isActive={hasAnimated} intensity={intensity} />
+          <ParticleTrail
+            isActive={hasAnimated}
+            intensity={intensity}
+            devicePerformance={devicePerformance}
+          />
         </div>
       )}
       <motion.div
@@ -206,8 +271,8 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
           hidden: {},
           visible: {
             transition: {
-              staggerChildren: 0.1,
-              delayChildren: 0.2,
+              staggerChildren: devicePerformance === 'low' ? 0.05 : 0.1,
+              delayChildren: devicePerformance === 'low' ? 0.1 : 0.2,
             }
           }
         }}
@@ -218,43 +283,72 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   );
 };
 
-// Particle trail component for enhanced visual effects
-const ParticleTrail: React.FC<{ isActive: boolean; intensity: 'light' | 'medium' | 'heavy' }> = ({
+// Optimized particle trail component
+const ParticleTrail: React.FC<{
+  isActive: boolean;
+  intensity: 'light' | 'medium' | 'heavy';
+  devicePerformance: 'low' | 'medium' | 'high';
+}> = ({
   isActive,
-  intensity
+  intensity,
+  devicePerformance
 }) => {
-  const particleCount = {
-    light: 5,
-    medium: 10,
-    heavy: 20,
-  }[intensity];
+    // Adjust particle count based on device performance
+    const baseCount = {
+      light: 5,
+      medium: 10,
+      heavy: 20,
+    }[intensity];
 
-  return (
-    <div className="absolute inset-0">
-      {Array.from({ length: particleCount }).map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 bg-blue-400 rounded-full opacity-60"
-          initial={{
-            x: Math.random() * 100 + '%',
-            y: '100%',
-            scale: 0,
-          }}
-          animate={isActive ? {
-            y: '-20%',
-            scale: [0, 1, 0],
-            opacity: [0, 0.8, 0],
-          } : {}}
-          transition={{
-            duration: 2 + Math.random() * 2,
-            delay: Math.random() * 1,
-            repeat: Infinity,
-            repeatDelay: Math.random() * 3,
-          }}
-        />
-      ))}
-    </div>
-  );
-};
+    const particleCount = devicePerformance === 'low'
+      ? Math.ceil(baseCount * 0.3) // 30% of particles on low-end
+      : devicePerformance === 'medium'
+        ? Math.ceil(baseCount * 0.6) // 60% on medium
+        : baseCount;
+
+    // Memoize particle positions to avoid recalculation
+    const particles = useMemo(() =>
+      Array.from({ length: particleCount }).map((_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        delay: Math.random() * 1,
+        duration: 2 + Math.random() * 2,
+        repeatDelay: Math.random() * 3,
+      })),
+      [particleCount]
+    );
+
+    return (
+      <div className="absolute inset-0">
+        {particles.map((particle) => (
+          <motion.div
+            key={particle.id}
+            className="absolute w-1 h-1 bg-blue-400 rounded-full opacity-60"
+            style={{
+              left: `${particle.x}%`,
+              // Use transform instead of top/bottom for better performance
+              transform: 'translateZ(0)', // Force GPU acceleration
+            }}
+            initial={{
+              y: '100vh',
+              scale: 0,
+            }}
+            animate={isActive ? {
+              y: '-20vh',
+              scale: [0, 1, 0],
+              opacity: [0, 0.8, 0],
+            } : {}}
+            transition={{
+              duration: particle.duration,
+              delay: particle.delay,
+              repeat: Infinity,
+              repeatDelay: particle.repeatDelay,
+              ease: 'linear', // Linear is more performant than complex easing
+            }}
+          />
+        ))}
+      </div>
+    );
+  };
 
 export default AnimatedSection;
