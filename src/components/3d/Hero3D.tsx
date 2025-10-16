@@ -294,7 +294,7 @@ const Hero3D: React.FC = () => {
         
         {/* Main Title - Line 2 */}
         <h2 
-          className="text-3xl md:text-5xl font-bold mb-8 opacity-0 hardware-accelerated inline-block tracking-widest" 
+          className="text-3xl md:text-5xl font-bold mb-6 opacity-0 hardware-accelerated inline-block tracking-widest" 
           style={{ 
             animation: "spectacularFadeInUp 0.7s ease-out 0.3s forwards",
           }}
