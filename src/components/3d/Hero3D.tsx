@@ -281,10 +281,10 @@ const Hero3D: React.FC = () => {
     >
       
       {/* Content Overlay with Spectacular Entrance */}
-      <div className="container mx-auto px-6 text-center z-10 mt-20 hardware-accelerated">
+      <div className="w-full max-w-7xl mx-auto px-4 text-center z-10 mt-20 hardware-accelerated">
         {/* Main Title - Line 1 */}
         <h1 
-          className="text-3xl md:text-5xl font-bold mb-4 opacity-0 hardware-accelerated"
+          className="text-2xl md:text-3xl font-bold mb-4 opacity-0 hardware-accelerated tracking-widest"
           style={{ 
             animation: "spectacularFadeInUp 0.8s ease-out 0.2s forwards",
           }}
@@ -294,7 +294,7 @@ const Hero3D: React.FC = () => {
         
         {/* Main Title - Line 2 */}
         <h2 
-          className="text-3xl md:text-5xl font-bold mb-8 opacity-0 hardware-accelerated inline-block" 
+          className="text-3xl md:text-5xl font-bold mb-8 opacity-0 hardware-accelerated inline-block tracking-widest" 
           style={{ 
             animation: "spectacularFadeInUp 0.7s ease-out 0.3s forwards",
           }}
@@ -305,7 +305,7 @@ const Hero3D: React.FC = () => {
         
         {/* Description with dramatic entrance */}
         <p 
-          className="text-xl md:text-2xl font-semibold text-foreground/80 mb-10 max-w-3xl mx-auto opacity-0 transform translate-y-10 hover:text-foreground transition-colors duration-500 hardware-accelerated leading-relaxed" 
+          className="text-xl md:text-2xl font-semibold text-foreground/80 mb-14 max-w-5xl mx-auto opacity-0 transform translate-y-10 hover:text-foreground transition-colors duration-500 hardware-accelerated leading-relaxed tracking-wider" 
           style={{ 
             animation: "spectacularFadeInUp 0.7s ease-out 0.4s forwards",
           }}
